@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Db = require('./data/db.js');
+router.use(express.json());
 
 // GET /api/posts	
 // Returns an array of all the post objects contained in the database.
@@ -75,5 +76,25 @@ router.delete('/:id', (req, res) => {
 		});
 });
 
+
+// PUT /api/posts/:id	
+// Updates the post with the specified id using data from the request body.
+// Returns the modified document, NOT the original.
+router.put('/:id', async (req, res) => {
+	try {
+        const post = await Db.update(req.params.id, req.body);
+        if (post) {
+            res.status(200).json(post);
+        } else {
+            res.status(404).json({ message: 'The post could not be found' });
+        }
+    } catch (error) {
+        // log error to database
+        console.log(error);
+        res.status(500).json({
+            message: 'Error updating the post',
+        });
+    }
+});
 
 module.exports = router;
