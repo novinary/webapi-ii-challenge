@@ -6,7 +6,7 @@ const server = express();
 
 server.use(express.json());
 
-server.use('/api/posts', postsRouter)  // first is path, second is router
+server.use(postsRouter) 
 
 server.get('/', (req, res) => {
   res.send(`

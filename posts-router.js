@@ -36,4 +36,26 @@ router.get('/:id', async (req, res) => {
 		});
 	}
 });
+
+// POST /api/posts
+// Creates a post using the information sent inside the request body.
+router.post('/api/posts', (req, res) => {
+	const post = req.body;
+	if (post.title && post.contents) {
+		res.status(201).json(post);
+	} else {
+		res.status(400).json({ errorMessage: 'Please provide title and contents for the post.' });
+		return;
+	}
+	Db.insert(post)
+		.then((post) => {
+			console.log('Created post => ', post);
+		})
+		.catch((error) => {
+			res.status(500).json({ error: 'There was an error while saving the post to the database' });
+		});
+});
+
+
+
 module.exports = router;
