@@ -39,7 +39,7 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/posts
 // Creates a post using the information sent inside the request body.
-router.post('/api/posts', (req, res) => {
+router.post('/', (req, res) => {
 	const post = req.body;
 	if (post.title && post.contents) {
 		res.status(201).json(post);
@@ -56,6 +56,24 @@ router.post('/api/posts', (req, res) => {
 		});
 });
 
+// DELETE /api/posts/:id	
+// Removes the post with the specified id and returns the deleted post object.
+// You may need to make additional calls to the database in order to satisfy this requirement.
+router.delete('/:id', (req, res) => {
+	const id = req.params.id;
+	Db.remove(id)
+		.then((post) => {
+			if (post) {
+				console.log('Deletion if post id:', id);
+				res.json(id);
+			} else {
+				res.status(404).json({ message: 'The post with the specified ID does not exist.' });
+			}
+		})
+		.catch((error) => {
+			res.status(500).json({ error: 'The post could not be removed' });
+		});
+});
 
 
 module.exports = router;
